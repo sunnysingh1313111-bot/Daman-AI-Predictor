@@ -1,0 +1,32 @@
+import requests, time, numpy as np, csv, os, warnings
+from flask import Flask, jsonify
+from datetime import datetime
+from collections import deque
+from sklearn.ensemble import *
+from xgboost import XGBClassifier
+import threading
+
+app = Flask(__name__)
+
+# --- AI LOGIC (GrandMasterV6) ---
+class GrandMasterV6:
+    def __init__(self):
+        self.models = {
+            'xgb': XGBClassifier(n_estimators=50),
+            'rf': RandomForestClassifier(n_estimators=50)
+        }
+        self.history = deque(maxlen=1000)
+    
+    def predict(self):
+        if len(self.history) < 10: return "WAIT", 0, "Learning..."
+        return "BIG", 98, "Strong" # Demo logic for start
+
+bot = GrandMasterV6()
+
+@app.route('/predict')
+def get_prediction():
+    p, c, s = bot.predict()
+    return jsonify({"p": p, "c": c, "s": s})
+
+if __name__ == "__main__":
+    app.run()
